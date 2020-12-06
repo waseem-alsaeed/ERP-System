@@ -1,0 +1,1272 @@
+﻿@model oddo.ViewModel.EmployeeViewModel
+<link href="/css/detail.css" rel="stylesheet" />
+
+
+<div class="container-fluid" style=" margin-top: 56px;
+        background: #fff;
+        padding-top: 8px;
+        padding-bottom: 8px;
+">
+    <nav aria-label="breadcrumb" class="mt-1">
+        <ol class="breadcrumb bg-white">
+            <li class="breadcrumb-item"><a href="/home/index">Employee</a></li>
+            <li class="breadcrumb-item"><a>New</a></li>
+
+        </ol>
+
+    </nav>
+    <div class="row ml-3">
+        <br />
+        <input type="button" class="btn btn-success" onclick="SubmitForm()" value="Save" />
+        <a href="/home/index" class="btn btn-info ml-2">Discard</a>
+    </div>
+</div>
+<div class="container-fluid mt-3">
+    <div class="row">
+        <div class="col-8 border-right">
+            <div class="card ">
+
+                <button type="button" class="btn btn-danger ml-2" data-toggle="modal" data-target="#SkillModal">
+                    Delete2
+                </button>
+                <table class="table table-bordered float-right">
+                    <tr>
+                        <td style="width:750px;"></td>
+                        <td class="p-2" style="width: 120px;">
+                            <i class="fa fa-fw  fa-book" style="display:inline;"></i>
+                            <p style="display:inline;"></p>
+                            <p style="display:inline;">Contracts</p>
+                        </td>
+                        <td style="width: 160px;">
+
+                            <i class="fa fa-fw o_button_icon fa-calendar"></i>
+                            <p style="display:inline;"></p>
+                            <p style="display:inline;">Time OFF</p>
+                        </td>
+                        <td style="width: 120px;">
+                            <i class="fas fa-money-bill"></i>
+                            <p style="display:inline;"></p>
+                            <p style="display:inline;">Payslips</p>
+
+                        </td>
+                        <td style="width: 135px;">
+                            <i class="fas fa-file-invoice"></i>
+                            <p style="display:inline;"></p>
+                            <p style="display:inline;">Documents</p>
+                        </td>
+                    </tr>
+
+                </table>
+                <div class="card-body mt-0 pt-0">
+                    <form id="DataForm" method="post" asp-controller="Home" asp-action="CreateEmployee" enctype="multipart/form-data">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-8">
+                                    <input type="hidden" id="dependant" asp-for="@Model.Dependants" />
+                                    <input type="hidden" asp-for="@Model.Employee.Id" value="@Model.Employee.Id" />
+
+                                    <label for="inp" class="inp">
+                                        <input type="text" id="inp1" placeholder="Employee's Name" required asp-for="@Model.Employee.Name">
+                                        <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                            <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                        </svg>
+                                        <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                            <path d="M1 7 5.5 11 L13 1"></path>
+                                        </svg>
+                                    </label>
+                                    <br />
+                                    <label for="inp" class="inp">
+                                        <input type="text" id="job" placeholder="Job Postion" required asp-for="@Model.Employee.JobTitle">
+                                        <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                            <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                        </svg>
+                                        <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                            <path d="M1 7 5.5 11 L13 1"></path>
+                                        </svg>
+                                    </label>
+                                    <br />
+
+                                    <select class="chzn-select mt-5" multiple="true" asp-for="@Model.TagIds" style="width:200px;" asp-items="@(new SelectList(Model.Tags, "Id", "Name"));">
+                                    </select>
+
+                                </div>
+                                <div class="col-4">
+                                    <div class="float-right">
+                                        <img src="@Model.ImageEncoded" id="blah" style="width:92px;height:123px; background-repeat: no-repeat; background-size:cover">
+                                        <br />
+                                        <div id="imageDiv" @(Model.ImageEncoded == null ? " " : "hidden")>
+                                            <input id="imgw" type="file" class=" btn-light" value="upload" asp-for="@Model.ImageUrl" />
+                                        </div>
+
+                                        <a class="p-0 mt-1" onclick="DeleteImage()"><i class="fa fa-trash" style="color:#ff4747;"></i></a>&nbsp;&nbsp;
+                                        <a class="p-0 mt-1" onclick="EditEmployeeImage()"><i style="color:#8e8e8e;" class="fa fa-edit"></i></a>
+                                        <input id="encode" type="text" asp-for="@Model.ImageEncoded" hidden />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="container-fluid m-0 p-0 mt-4" style="margin-top:19px">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-row">
+                                        <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px;">Work Mobile</label>
+                                        <div class="col-sm-9">
+                                            <label for="inp" class="inp" style="height: 48px;">
+                                                <input asp-for="@Model.Employee.MobilePhone" type="text" id="inp3" required>
+                                                <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                    <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                </svg>
+                                                <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                    <path d="M1 7 5.5 11 L13 1"></path>
+                                                </svg>
+                                            </label>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-row">
+                                        <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px;">Work Phone</label>
+                                        <div class="col-sm-9">
+                                            <label for="inp" class="inp" style="height: 48px;">
+                                                <input asp-for="@Model.Employee.WorkPhone" type="text" id="inp4" required>
+                                                <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                    <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                </svg>
+                                                <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                    <path d="M1 7 5.5 11 L13 1"></path>
+                                                </svg>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px;">Work Email</label>
+                                        <div class="col-sm-9">
+                                            <label for="inp" class="inp" style="height: 48px;">
+                                                <input asp-for="@Model.Employee.WorkEmail" type="text" id="inp5" required>
+                                                <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                    <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                </svg>
+                                                <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                    <path d="M1 7 5.5 11 L13 1"></path>
+                                                </svg>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px;">Work Location</label>
+                                        <div class="col-sm-9">
+                                            <label for="inp" class="inp" style="height: 48px;">
+                                                <input asp-for="@Model.Employee.WorkLocation" type="text" id="inp6" required>
+                                                <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                    <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                </svg>
+                                                <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                    <path d="M1 7 5.5 11 L13 1"></path>
+                                                </svg>
+                                            </label>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+                                </div>
+                                <div class="col-6 p-4">
+                                    <p class="card-text b mt-4" style="display:inline">Department </p>
+                                    <div style="display:inline">
+                                        <select id="selectbox" style="border-bottom: 2px solid #cacaca;width: 400px;" asp-for="@Model.Departmente.Id" asp-items="@(new SelectList(Model.Departments, "Id", "Name"))">
+                                            <option value="" selected="selected" disabled="disabled"></option>
+                                        </select>
+                                    </div>
+                                    <br />
+                                    <p class="card-text b mt-4" style="display:inline">Job Posstion </p>
+                                    <div style="display:inline">
+                                        <select onchange="selectchangejob()" id="jobselect" style="border-bottom: 2px solid #cacaca;width: 400px;" asp-for="@Model.Job.Id" asp-items="@(new SelectList(Model.Jobss, "Id", "Name"))">
+                                            <option value="" selected="selected" disabled="disabled"></option>
+                                        </select>
+                                    </div>
+
+                                    <br />
+                                    <p class="card-text b mt-4 mr-4" style="display:inline">Manager </p>
+                                    <div style="display:inline">
+                                        <select id="selectbox" style="border-bottom: 2px solid #cacaca;width: 400px;" asp-for="@Model.Employee.ParentId" asp-items="@(new SelectList(Model.Manegers, "Id", "Name"))">
+                                            <option value="" selected="selected" disabled="disabled"></option>
+                                        </select>
+                                    </div>
+
+
+
+
+                                </div>
+                            </div>
+                            <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Resume</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Work Information</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Private Information</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" id="HR-tab" data-toggle="tab" href="#HR" role="tab" aria-controls="HR" aria-selected="false">HR Settings</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="Personal-tab" data-toggle="tab" href="#Personal" role="tab" aria-controls="Personal" aria-selected="false">Personal Documents</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <p class="card-text disabled" style="font-weight: bold; color: gray;font-size:large"> Resumé empty</p>
+                                                <!--  <button type="button" data-toggle="modal" data-target="#ResumeModal"  class="btn btn-success">Create a New Entry</button>-->
+                                                @foreach (var item in Model.EmployeeResumesTypes)
+                                                {
+                                                    <div class="card border-0" id="@item.Id">
+                                                        <div class="card-header">
+                                                            <b> @item.Name  </b>
+                                                            <button type="button" data-toggle="modal" data-target="#ResumeModal" class="btn btn-secondary  float-right btn-sm ">Add</button>
+                                                        </div>
+                                                        <div class="card-body" id="body_@item.Id">
+                                                            @foreach (var child in Model.EmployeeResumes)
+                                                            {
+                                                                if (item.Id == child.LineTypeId.ToString())
+                                                                {
+                                                                    <div id="@child.Id">
+                                                                        <p class="d-inline">@child.DateStart?.ToString("yyyy-MM-dd")</p><p class="d-inline">-@child.DateEnd?.ToString("yyyy-MM-dd")</p>
+                                                                        <h6 class="card-text">@child.Name</h6>
+                                                                        <p>@child.Description</p>
+                                                                    </div>
+                                                                }
+
+                                                            }
+
+                                                        </div>
+                                                    </div>
+
+                                                }
+
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <h5>SKILLS</h5>
+                                                <button type="button" class="btn btn-success">Create a New Entry</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-8 border-right ">
+                                                <h5 class="mt-5">Location</h5>
+                                                <p class="card-text b mt-4" style="display:inline">Work Adresse </p>
+                                                <div style="display:inline">
+                                                    <select id="selectbox" style="border-bottom: 2px solid #cacaca;width:350px;" asp-for="@Model.Address.Id" asp-items="@(new SelectList(Model.Addresses, "Id", "Name"))">
+                                                        <option value="" selected="selected" disabled="disabled"></option>
+                                                    </select>
+                                                </div>
+
+                                                <h5 class="mt-5">Responsibles</h5>
+                                                <p class="card-text b mt-4 mr-3" style="display:inline">Coash </p>
+                                                <div style="display:inline">
+                                                    <select id="selectbox" style="border-bottom: 2px solid #cacaca;width: 400px;" asp-for="@Model.Employee.CoachId" asp-items="@(new SelectList(Model.Coachs, "Id", "Name"))">
+                                                        <option value="" selected="selected" disabled="disabled"></option>
+
+                                                    </select>
+                                                </div>
+                                                <br />
+                                                <p class="card-text b mt-5" style="display:inline">Time off </p>
+                                                <div style="display:inline;margin-left:3px">
+                                                    <select id="selectbox" style="border-bottom: 2px solid #cacaca;width: 400px;" asp-for="@Model.TimeOff.Id" asp-items="@(new SelectList(Model.TimeOffs, "Id", "Name"))">
+                                                        <option value="" selected="selected" disabled="disabled"></option>
+
+                                                    </select>
+                                                </div>
+                                                <br />
+                                                <p class="card-text b mt-4 mr-2" style="display:inline">Expense </p>
+                                                <div style="display:inline">
+                                                    <select id="selectbox" style="border-bottom: 2px solid #cacaca;width: 400px;" asp-for="@Model.Expense.Id" asp-items="@(new SelectList(Model.Expenses, "Id", "Name"))">
+                                                        <option value="" selected="selected" disabled="disabled"></option>
+
+                                                    </select>
+                                                </div>
+                                                <br />
+                                                <p class="card-text b" style="display:inline">Time Sheet </p>
+                                                <div style="display:inline">
+                                                    <select disabled id="selectbox" style="border-bottom: 2px solid #cacaca;width: 390px;">
+                                                        <option value="" selected="selected" disabled="disabled"></option>
+                                                        <option value="1">Ocean Wall</option>
+                                                        <option value="2">Skate Park</option>
+                                                        <option value="3">Mountain View</option>
+                                                        <option value="4">Cityscape</option>
+                                                        <option value="5">Workshop</option>
+                                                    </select>
+                                                </div>
+                                                <br />
+                                                <h5 class="mt-5">Schedule</h5>
+                                                <p class="card-text b mt-4" style="display:inline">Working Hours </p>
+                                                <div style="display:inline">
+                                                    <select id="selectbox" style="border-bottom: 2px solid #cacaca;width: 400px;" asp-for="@Model.ResourceCalendar.Id" asp-items="@(new SelectList(Model.ResourceCalendars, "Id", "Name"))">
+                                                        <option value="" selected="selected" disabled="disabled"></option>
+
+                                                    </select>
+                                                </div>
+                                                <br />
+                                                <p class="card-text b mt-4 mr-4" style="display:inline;margin-left:3px">Time zone </p>
+                                                <div style="display:inline">
+                                                    <select id="selectbox" style="border-bottom: 2px solid #cacaca;width: 400px; " asp-for="@Model.Timezone.Id" asp-items="@(new SelectList(Model.Timezones, "Id", "Name"))">
+                                                        <option value="" selected="selected" disabled="disabled"></option>
+
+                                                    </select>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="m-4">Organization Chart</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h5 class="mt-5">Private Contact</h5>
+                                                <p class="card-text b mt-4" style="display:inline">Address </p>
+                                                <div style="display:inline;margin-left:90px">
+                                                    <select id="selectbox" style="border-bottom: 2px solid #cacaca;width: 277px;" asp-for="@Model.Address.Id" asp-items="@(new SelectList(Model.Addresses, "Id", "Name"))">
+                                                        <option value="" selected="selected" disabled="disabled"></option>
+
+                                                    </select>
+                                                </div>
+                                                <br />
+                                                <p class="card-text mt-4 " style="font-weight: bold;color: gray;">Email</p>
+                                                <p class="card-text " style="font-weight: bold;color: gray;">Phone</p>
+                                                <p class="card-text b" style="display:inline"> </p>
+                                                <div class="form-row">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">Km Home-Work</label>
+                                                    <div class="col-sm-9" style="width: 100%">
+                                                        <label for="inp" class="inp" style="height: 48px;">
+                                                            <input asp-for="@Model.Employee.KmHomeWork" type="text" id="inp8" required>
+                                                            <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                            </svg>
+                                                            <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                <path d="M1 7 5.5 11 L13 1"></path>
+                                                            </svg>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <h5 class="mt-5">Marial Status</h5>
+                                                <p class="card-text" style="display: inline;font-weight: bold;">Marial Status</p>
+                                                <div style="display:inline;margin-left: 70px">
+                                                    <select onchange="selectchange()" id="mar" style="border-bottom: 2px solid #cacaca;width: 260px;" asp-for="@Model.Employee.Marital">
+                                                        <option value="" selected="selected" disabled="disabled"></option>
+                                                        <option value="single">Single</option>
+                                                        <option value="married">married</option>
+                                                        <option value="legal cohabitant">Legal cohabitant</option>
+                                                        <option value="widower">widower</option>
+                                                        <option value="divorced">Divorced</option>
+                                                    </select>
+                                                </div>
+                                                <div id="hide" hidden>
+                                                    <div class="form-row">
+                                                        <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">Spouse Complete Name</label>
+                                                        <div class="col-sm-9" style="width: 100%">
+                                                            <label for="inp" class="inp" style="height: 48px;">
+                                                                <input type="text" id="inp9" asp-for="@Model.Employee.SpouseCompleteName" required>
+                                                                <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                    <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                                </svg>
+                                                                <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                    <path d="M1 7 5.5 11 L13 1"></path>
+                                                                </svg>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-row">
+                                                        <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">Spouse Birthdate</label>
+                                                        <div class="col-sm-9" style="width: 100%">
+                                                            <label for="inp" class="inp" style="height: 48px;">
+                                                                <input type="date" id="inp11" asp-for="@Model.Employee.SpouseBirthdate" data-date-format="mm/dd/yyyy" required value="@(Model.Employee.SpouseBirthdate.HasValue ? Model.Employee.SpouseBirthdate.Value.ToString("yyyy-MM-dd") : "")">
+                                                                <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                    <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                                </svg>
+                                                                <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                    <path d="M1 7 5.5 11 L13 1"></path>
+                                                                </svg>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="form-row">
+                                                        <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">Second Spouse Complete Name</label>
+                                                        <div class="col-sm-9" style="width: 100%">
+                                                            <label for="inp" class="inp" style="height: 48px;">
+                                                                <input type="text" id="inp12" required asp-for="@Model.Employee.XSpouseCompleteName">
+                                                                <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                    <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                                </svg>
+                                                                <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                    <path d="M1 7 5.5 11 L13 1"></path>
+                                                                </svg>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                    <div class="form-row">
+                                                        <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">Second Spouse Birthdate</label>
+                                                        <div class="col-sm-9" style="width: 100%">
+                                                            <label for="inp" class="inp" style="height: 48px;">
+                                                                <input type="date" id="inp13" required data-date-format="mm/dd/yyyy" value="@Model.Employee.XSpouseBirthdate" asp-for="@Model.Employee.XSpouseBirthdate">
+                                                                <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                    <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                                </svg>
+                                                                <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                    <path d="M1 7 5.5 11 L13 1"></path>
+                                                                </svg>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <h5 class="mt-5">Emergency </h5>
+                                                <div class="form-row">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">Emergency Contact</label>
+                                                    <div class="col-sm-9" style="width: 100%">
+                                                        <label for="inp" class="inp" style="height: 48px;">
+                                                            <input type="text" id="inp13" required asp-for="@Model.Employee.EmergencyContact">
+                                                            <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                            </svg>
+                                                            <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                <path d="M1 7 5.5 11 L13 1"></path>
+                                                            </svg>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">Emergency Phone</label>
+                                                    <div class="col-sm-9" style="width: 100%">
+                                                        <label for="inp" class="inp" style="height: 48px;">
+                                                            <input type="text" required id="inp19" asp-for="@Model.Employee.EmergencyPhone">
+                                                            <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                            </svg>
+                                                            <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                <path d="M1 7 5.5 11 L13 1"></path>
+                                                            </svg>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <h5 class="mt-5">Education </h5>
+                                                <p class="card-text b mt-4" style="display:inline">Certificate Level </p>
+                                                <div style="display:inline;margin-left:40px">
+                                                    <select id="selectbox" style="border-bottom: 2px solid #cacaca;width: 277px;" asp-for="@Model.Employee.Certificate">
+                                                        <option value="" selected="selected" disabled="disabled"></option>
+                                                        <option value="Bachelor">Bachelor</option>
+                                                        <option value="Master">Master</option>
+                                                        <option value="Other">other</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">Field Of Study</label>
+                                                    <div class="col-sm-9" style="width: 100%">
+                                                        <label for="inp" class="inp" style="height: 48px;">
+                                                            <input required type="text" id="inp14" asp-for="@Model.Employee.StudyField">
+                                                            <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                            </svg>
+                                                            <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                <path d="M1 7 5.5 11 L13 1"></path>
+                                                            </svg>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">School</label>
+                                                    <div class="col-sm-9" style="width: 100%">
+                                                        <label for="inp" class="inp" style="height: 48px;">
+                                                            <input required type="text" id="inp199" asp-for="@Model.Employee.StudySchool">
+                                                            <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                            </svg>
+                                                            <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                <path d="M1 7 5.5 11 L13 1"></path>
+                                                            </svg>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <h5 class="mt-5">Citizenship</h5>
+                                                <p class="card-text b mt-4" style="display:inline">Nationality (Country)</p>
+                                                <div style="display:inline;margin-left:9px">
+                                                    <select id="selectbox" style="border-bottom: 2px solid #cacaca;width: 277px;" asp-for="@Model.Employee.CountryId" asp-items="@(new SelectList(Model.Countries, "Id", "Name"))">
+                                                        <option value="" selected="selected" disabled="disabled"></option>
+
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">Identification No</label>
+                                                    <div class="col-sm-9" style="width: 100%">
+                                                        <label for="inp" class="inp" style="height: 48px;">
+                                                            <input required type="text" id="inp155" asp-for="@Model.Employee.IdentificationId">
+                                                            <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                            </svg>
+                                                            <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                <path d="M1 7 5.5 11 L13 1"></path>
+                                                            </svg>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">Passport No</label>
+                                                    <div class="col-sm-9" style="width: 100%">
+                                                        <label for="inp" class="inp" style="height: 48px;">
+                                                            <input required type="text" id="inp185" asp-for="@Model.Employee.PassportId">
+                                                            <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                            </svg>
+                                                            <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                <path d="M1 7 5.5 11 L13 1"></path>
+                                                            </svg>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <p class="card-text b mt-4" style="display:inline">Gender</p>
+                                                <div style="display:inline ;margin-left: 90px">
+                                                    <select id="selectbox" style="border-bottom: 2px solid #cacaca;width: 277px;" asp-for="@Model.Employee.Gender">
+                                                        <option value="" selected="selected" disabled="disabled"></option>
+                                                        <option value="male">Male</option>
+                                                        <option value="female">Female</option>
+                                                        <option value="other">Other</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-row">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">Date of Birth</label>
+                                                    <div class="col-sm-9" style="width: 100%">
+                                                        <label for="inp" class="inp" style="height: 48px;">
+
+                                                            <input required type="date" id="inp1566" asp-for="@Model.Employee.Birthday" value="@(Model.Employee.SpouseBirthdate.HasValue ? Model.Employee.Birthday.Value.ToString("yyyy-MM-dd") : "")">
+                                                            <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                            </svg>
+                                                            <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                <path d="M1 7 5.5 11 L13 1"></path>
+                                                            </svg>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">Place Of Birth</label>
+                                                    <div class="col-sm-9" style="width: 100%">
+                                                        <label for="inp" class="inp" style="height: 48px;">
+                                                            <input required type="text" id="inp1335" asp-for="@Model.Employee.PlaceOfBirth">
+                                                            <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                            </svg>
+                                                            <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                <path d="M1 7 5.5 11 L13 1"></path>
+                                                            </svg>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <p class="card-text b mt-4" style="display:inline">Country Of Birth</p>
+                                                <div style="display:inline;margin-left:42px">
+                                                    <select id="selectbox" style="border-bottom: 2px solid #cacaca;width: 277px;" asp-for="@Model.Employee.CountryOfBirth" asp-items="@(new SelectList(Model.Countries, "Id", "Name"))">
+                                                        <option value="" selected="selected" disabled="disabled"></option>
+
+                                                    </select>
+                                                </div>
+                                                <h5 class="mt-5">Dependant</h5>
+                                                <p class="card-text" style="font-weight: bold; display:inline;">Number of Children</p>
+                                                <p id="countdependant" class="card-text" style="display: inline;margin-left: 80px;"></p>
+                                                <br />
+                                                <button type="button" class="btn btn-success mt-5" onclick="create()">Add Dependant</button>
+                                                <table style="" id="example" class="table mt-1 ">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Birth Date</th>
+                                                            <th>Delete</th>
+                                                            <th hidden></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="mcontent">
+                                                        @{var y = 1; }
+                                                        @foreach (var item in Model.EmployeeDependents)
+                                                        {
+                                                            var myDate = item.Bdate.Value.ToString("yyyy-MM-dd");
+
+                                                            <tr id="@y">
+                                                                <td><input id="name_@y" type="text" value="@item.Name"></td>
+                                                                <td><input id="birth_@y" type="date" value="@myDate"></td>
+                                                                <td><a href="javascript:;" onclick="Delete(@y)"><i class="fa fa-trash"></i></a></td>
+                                                                <td hidden><input id="id_@y" type="hidden" value="@item.Id"></td>
+                                                            </tr>
+                                                            y++;
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                                <h5 class="mt-5">Work Permit</h5>
+
+                                                <div class="form-row">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">Visa No</label>
+                                                    <div class="col-sm-9" style="width: 100%">
+                                                        <label for="inp" class="inp" style="height: 48px;">
+                                                            <input required type="text" id="inp1215" asp-for="@Model.Employee.VisaNo">
+                                                            <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                            </svg>
+                                                            <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                <path d="M1 7 5.5 11 L13 1"></path>
+                                                            </svg>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">Work Permit No</label>
+                                                    <div class="col-sm-9" style="width: 100%">
+                                                        <label for="inp" class="inp" style="height: 48px;">
+                                                            <input required type="text" id="inp1995" asp-for="@Model.Employee.PermitNo">
+                                                            <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                            </svg>
+                                                            <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                <path d="M1 7 5.5 11 L13 1"></path>
+                                                            </svg>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">Visa Expire Date</label>
+                                                    <div class="col-sm-9" style="width: 100%">
+                                                        <label for="inp" class="inp" style="height: 48px;">
+                                                            <input required type="date" id="inp1585" asp-for="@Model.Employee.VisaExpire">
+                                                            <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                            </svg>
+                                                            <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                <path d="M1 7 5.5 11 L13 1"></path>
+                                                            </svg>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="tab-pane fade" id="HR" role="tabpanel" aria-labelledby="contact-tab">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm">
+                                                <h5 class="mt-5">Status</h5>
+                                                <p class="card-text b mt-4" style="display:inline">Related User</p>
+                                                <div style="display:inline;margin-left:50px">
+                                                    <select id="selectbox" style="border-bottom: 2px solid #cacaca;width: 277px;" asp-for="@Model.RelatedUser.Id" asp-items="@(new SelectList(Model.RelatedUsers, "Id", "Name"))">
+                                                        <option value="" selected="selected" disabled="disabled"></option>
+                                                    </select>
+                                                </div>
+
+
+                                                <div class="form-row">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">Registration Number of the Employee</label>
+                                                    <div class="col-sm-9" style="width: 100%">
+                                                        <label for="inp" class="inp" style="height: 48px;">
+                                                            <input required type="text" id="inp15" asp-for="@Model.Employee.RegistrationNumber">
+                                                            <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                            </svg>
+                                                            <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                <path d="M1 7 5.5 11 L13 1"></path>
+                                                            </svg>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                            <div class="col-sm">
+                                                <h5 class="mt-5">Attendence</h5>
+
+                                                <div class="form-row">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">PIN</label>
+                                                    <div class="col-sm-9" style="width: 100%">
+                                                        <label for="inp" class="inp" style="height: 48px;">
+                                                            <input required type="text" id="inp15" asp-for="@Model.Employee.Pin">
+                                                            <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                            </svg>
+                                                            <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                <path d="M1 7 5.5 11 L13 1"></path>
+                                                            </svg>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <label for="inputEmail3" class="col-sm-3 col-form-label" style="font-size:13px; font-weight:bold;  padding-top:14px">Badge ID</label>
+                                                    <div class="col-sm-9" style="width: 100%">
+                                                        <label for="inp" class="inp" style="height: 48px;">
+                                                            <input required type="text" id="inp15" asp-for="@Model.Employee.Barcode">
+                                                            <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                                                <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                                            </svg>
+                                                            <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                                                <path d="M1 7 5.5 11 L13 1"></path>
+                                                            </svg>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane fade" id="Personal" role="tabpanel" aria-labelledby="contact-tab">
+                                    <div class="container">
+                                        <div class="row align-items-end mt-4">
+
+                                            <div class="col-6 ">
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <p class="card-text m-0 mt-4 " style="font-weight: bold;display:inline"> Identity Card</p>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <div @(Model.Employee.XStudioIdentityCardFilename == null ? " " : "hidden") id="choosefileDiv1">
+                                                            <input asp-for="@Model.IdentityCard" type="file" id="choose-file1" onchange="ChangeFile(event)" />
+                                                        </div>
+                                                        <div id="choose-file1div" @(Model.Employee.XStudioIdentityCardFilename != null ? " " : "hidden")>
+                                                            <input type="text" readonly class="form-control-plaintext w-75" id="choose-file1-label" value="@Model.Employee.XStudioIdentityCardFilename" style="display:inline" asp-for="@Model.Employee.XStudioIdentityCardFilename">
+                                                            <div style="display:inline">
+                                                                <a id="choose-file1-a" onclick="EditFile(this)"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;<a id="choose-file1-a1" onclick="removeFile(this)"><i class="fa fa-trash"></i></a>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <p class="card-text m-0 mt-4 " style="font-weight: bold;display:inline"> Warnings and deductions</p>
+
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <div @(Model.Employee.XStudioFieldXeed7Filename == null ? "" : "hidden") id="choosefileDiv2">
+                                                            <input type="file" id="choose-file2" asp-for="@Model.Warningsdeductions" onchange="ChangeFile(event)" />
+                                                        </div>
+                                                        <div id="choose-file2div" @(Model.Employee.XStudioFieldXeed7Filename != null ? " " : "hidden")>
+                                                            <input type="text" readonly class="form-control-plaintext w-75" id="choose-file2-label" value="@Model.Employee.XStudioFieldXeed7Filename" style="display:inline" asp-for="@Model.Employee.XStudioFieldXeed7Filename">
+                                                            <div style="display:inline">
+                                                                <a id="choose-file2-a" onclick="EditFile(this)"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;<a id="choose-file2-a1" onclick="removeFile(this)"><i class="fa fa-trash"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <p class="card-text m-0 mt-4 " style="font-weight: bold;display:inline"> Medical Insurance</p>
+
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <div @(Model.Employee.XStudioMedicalInsurance1Filename == null ? "" : "hidden") id="choosefileDiv3">
+                                                            <input type="file" id="choose-file3" asp-for="@Model.MedicalInsurance" onchange="ChangeFile(event)" />
+                                                        </div>
+                                                        <div id="choose-file3div" @(Model.Employee.XStudioMedicalInsurance1Filename != null ? " " : "hidden")>
+                                                            <input type="text" readonly class="form-control-plaintext w-75" id="choose-file3-label" value="@Model.Employee.XStudioMedicalInsurance1Filename" style="display:inline" asp-for="@Model.Employee.XStudioMedicalInsurance1Filename">
+                                                            <div style="display:inline">
+                                                                <a id="choose-file3-a" onclick="EditFile(this)"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;<a id="choose-file3-a1" onclick="removeFile(this)"><i class="fa fa-trash"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <p class="card-text m-0 mt-4 " style="font-weight: bold;display:inline"> Documents</p>
+
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <div @(Model.Employee.XStudioUploadFileFilename == null ? "" : "hidden") id="choosefileDiv4">
+                                                            <input type="file" id="choose-file4" asp-for="@Model.Documents" onchange="ChangeFile(event)" />
+                                                        </div>
+                                                        <div id="choose-file4div" @(Model.Employee.XStudioUploadFileFilename != null ? " " : "hidden")>
+                                                            <input type="text" readonly class="form-control-plaintext w-75" id="choose-file4-label" value="@Model.Employee.XStudioUploadFileFilename" style="display:inline" asp-for="@Model.Employee.XStudioUploadFileFilename">
+                                                            <div style="display:inline">
+                                                                <a id="choose-file4-a" onclick="EditFile(this)"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;<a id="choose-file4-a1" onclick="removeFile(this)"><i class="fa fa-trash"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+                <div class="col-4">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal  fade" id="ResumeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">new Resume</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="sam">
+                    <h6>Name</h6>
+                    <label for="inp" class="inp">
+                        <input type="text" id="ResumeName" placeholder="Title" required asp-for="@Model.EmployeeResume.Name">
+                        <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                            <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                        </svg>
+                        <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                            <path d="M1 7 5.5 11 L13 1"></path>
+                        </svg>
+                    </label>
+                    <div class="container-fluid mt-2 p-0">
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="card-text b mt-4" style="display:inline">Type</p>
+                                <div style="display:inline ;margin-left: 10px">
+                                    <select id="ResumeSelectType" style="border-bottom: 2px solid #cacaca;width: 277px;" asp-for="@Model.EmployeeResume.Id" asp-items="@(new SelectList(Model.EmployeeResumesTypes, "Id", "Name"))">
+                                        <option value="" selected="selected" disabled="disabled"></option>
+
+                                    </select>
+                                </div>
+
+
+                            </div>
+                            <div class="col-6">
+                                <label for="inputEmail3" class="" style="font-size:13px; font-weight:bold;display:inline;  padding-top:14px">Start date </label>
+                                <div style="width: 100%;display:inline">
+                                    <label for="inp" class="inp" style="height: 48px;">
+                                        <input type="date" id="ResumeStartDate" asp-for="@Model.EmployeeResume.DateStart" data-date-format="mm/dd/yyyy" required value="@Model.EmployeeResume.DateStart?.ToString("yyyy-MM-dd")">
+                                        <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                            <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                        </svg>
+                                        <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                            <path d="M1 7 5.5 11 L13 1"></path>
+                                        </svg>
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="card-text b mt-4" style="display:inline">Display Type</p>
+                                <div style="display:inline ;margin-left: 10px">
+                                    <select style="border-bottom: 2px solid #cacaca;width: 277px;" asp-for="@Model.EmployeeResume.DisplayType" asp-items="@(new SelectList(Model.EmployeeResumes, "Id", "Name"))">
+                                        <option value="" selected="selected" disabled="disabled"></option>
+                                    </select>
+                                </div>
+
+
+                            </div>
+                            <div class="col-6">
+                                <label for="inputEmail3" style="font-size:13px; font-weight:bold;  padding-top:14px;display:inline">End date </label>
+                                <div style="width: 100%;display:inline">
+                                    <label for="inp" class="inp" style="height: 48px; ">
+                                        <input type="date" id="ResumeEnddate" asp-for="@Model.EmployeeResume.DateEnd" data-date-format="mm/dd/yyyy" required value="@Model.EmployeeResume.DateEnd?.ToString("yyyy-MM-dd")">
+                                        <svg width="280px" height="18px" viewBox="0 0 280 18" class="border2">
+                                            <path d="M0,12 L223.166144,12 C217.241379,12 217.899687,12 225.141066,12 C236.003135,12 241.9279,12 249.827586,12 C257.727273,12 264.639498,12 274.514107,12 C281.097179,12 281.755486,12 276.489028,12"></path>
+                                        </svg>
+                                        <svg width="14px" height="12px" viewBox="0 0 14 12" class="check">
+                                            <path d="M1 7 5.5 11 L13 1"></path>
+                                        </svg>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <textarea class="mt-2" id="ResumeDescription" placeholder="Description" cols="150" rows="3" style="border:0px" required asp-for="@Model.EmployeeResume.Description">@Model.EmployeeResume.Description</textarea>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
+                        <button type="button" onclick="saveResume()" class="btn btn-success" data-dismiss="modal">Save & Close</button>
+                        <button type="button" onclick="saveResume()" class="btn btn-success">Save & New</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal  fade" id="SkillModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">new Resume</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form id="skills-form" class="mt-2 p-0">
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="card-text b mt-4" style="display:inline">Skill Type</p>
+                            <div style="display:inline ;margin-left: 10px">
+                                <select id="selectbox" style="border-bottom: 2px solid #cacaca;width: 277px;" asp-for="@Model.Employee.Gender">
+                                    <option value="" selected="selected" disabled="disabled"></option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+
+                        </div>
+                        <div class="col-6">
+                            <p class="card-text b mt-4" style="display:inline">Skill Level</p>
+                            <div style="display:inline ;margin-left: 10px">
+                                <select id="selectbox" style="border-bottom: 2px solid #cacaca;width: 277px;" asp-for="@Model.Employee.Gender">
+                                    <option value="" selected="selected" disabled="disabled"></option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <p class="card-text b mt-4" style="display:inline">Skill</p>
+                            <div style="display:inline ;margin-left: 10px">
+                                <select id="selectbox" style="border-bottom: 2px solid #cacaca;width: 277px;" asp-for="@Model.Employee.Gender">
+                                    <option value="" selected="selected" disabled="disabled"></option>
+                                    <option value="male">Male</option>
+                                </select>
+                            </div>
+
+
+                        </div>
+                        <div class="col-6">
+
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-2 col-form-label b">Progress</label>
+                                <div class="col-sm-10 m-auto">
+                                    <div class="progress w-25">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
+                    <button type="button" onclick="window.location.href='/home/CreateSkill'" class="btn btn-success" data-dismiss="modal">Save & Close</button>
+                    <button type="button" class="btn btn-success" id="btn-sava-and-new">Save & New</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+
+    @if (Model.EmployeeDependents.Count > 0)
+    {
+        <script>
+            var count = parseInt('@Model.EmployeeDependents.Count');
+            var arr = new Array();
+            var cnt = 1;
+            for (var i = 0; i < count; i++) {
+                arr.push(cnt);
+                cnt++;
+            }
+        </script>
+
+    }
+    else
+    {
+        <script>
+            var count = 0;
+            var arr = new Array();
+        </script>
+    }
+<script>
+    var childcount = 0;
+    var resumes = [];
+
+        $(function () {
+            @{
+                foreach (var item in Model.EmployeeResumes)
+                {
+
+                <text>
+                    var o = {
+                        Id: '@item.Id',
+                        Name: '@item.Name',
+                        DateStart:'@item.DateStart',
+                        DateEnd:'@item.DateEnd',
+                        lineLineTypeId:'@item.LineTypeId',
+                    };
+                    resumes.push(o)
+                </text>
+                }
+            }
+
+            $(".chzn-select").chosen();
+            $('.datepicker').datepicker();
+                function readURL(input) {
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+
+                        reader.onload = function (e) {
+                        $('#blah').attr('src', e.target.result);
+                        $('#encode').attr('value', e.target.result);
+                        }
+
+                        reader.readAsDataURL(input.files[0]); // convert to base64 string
+                    }
+                }
+
+            $("#imgw").change(function () {
+                    readURL(this);
+                });
+
+
+
+        });
+
+
+
+    function saveResume() {
+        var typeid = $('#ResumeSelectType').val();
+        var startdate = $('#ResumeStartDate').val();
+        var Enddate = $('#ResumeEnddate').val();
+        var discription = $('#ResumeDescription').val();
+        var name = $('#ResumeName').val();
+        var html = [
+            '<div id="c_' + childcount + '">',
+    '<p class="d-inline">' + startdate + '</p><p class="d-inline">-' + Enddate + '</p>',
+    ' <h6 class="card-text">' + name + '</h6>',
+    ' <p>' + discription + '</p>',
+       '</div>'].join('');
+        $('#body_' + typeid).append(html);
+          var o = {
+                        Id: '0',
+                        Name: name,
+                        DateStart: startdate,
+                        DateEnd: Enddate,
+                        lineLineTypeId: typeid,
+                    };
+        resumes.push(o)
+        console.log(resumes);
+        $('#sam')[0].reset();
+
+
+    }
+
+        function EditFile(event) {
+            switch (event.id) {
+            case 'choose-file1-a':
+                $('#choose-file1').trigger('click');
+                    break;
+                case 'choose-file2-a':
+                    $('#choose-file2').trigger('click');
+                    break;
+                case 'choose-file3-a':
+                    $('#choose-file3').trigger('click');
+                    break;
+                case 'choose-file4-a':
+                    $('#choose-file4').trigger('click');
+                    break;
+            }
+
+
+        }
+        function EditEmployeeImage() {
+            $('#imgw').trigger('click');
+
+        }
+        function ChangeFile(event) {
+
+            switch (event.target.id) {
+                case 'choose-file1':
+                    $('#choose-file1-label').val($('#choose-file1').val());
+                    break;
+                case 'choose-file2':
+                    $('#choose-file2-label').val($('#choose-file2').val());
+                    break;
+                case 'choose-file3':
+                    $('#choose-file3-label').val($('#choose-file3').val());
+                    break;
+                case 'choose-file4':
+                    $('#choose-file4-label').val($('#choose-file4').val());
+                    break;
+            }
+        }
+
+        function removeFile(event) {
+            switch (event.id) {
+                case 'choose-file1-a1':
+
+                    $('#choose-file1-label').val(null);
+                    $('#choose-file1').val(null);
+                    $('#choose-file1div').hide();
+                    $('#choosefileDiv1').attr("hidden", false);
+                    break;
+                case 'choose-file2-a1':
+
+                    $('#choose-file2-label').val(null);
+                    $('#choose-file2').val(null);
+                    $('#choose-file2div').hide();
+                    $('#choosefileDiv2').attr("hidden", false);
+                    break;
+                case 'choose-file3-a1':
+
+                    $('#choose-file3-label').val(null);
+                    $('#choose-file3').val(null);
+                    $('#choose-file3div').hide();
+                    $('#choosefileDiv3').attr("hidden", false);
+                    break;
+                case 'choose-file4-a1':
+
+                    $('#choose-file4-label').val(null);
+                    $('#choose-file4').val(null);
+                    $('#choose-file4div').hide();
+                    $('#choosefileDiv4').attr("hidden", false);
+                    break;
+            }
+
+        }
+        function selectchange() {
+            var selected = $('#mar option:selected').text();
+            if (selected == "married") {
+                $("#hide").attr("hidden", false)
+            }
+            else { $("#hide").attr("hidden", true) }
+        }
+
+        function selectchangejob() {
+            $("#job").val($('#jobselect option:selected').text())
+
+        }
+        function DeleteImage() {
+
+            $('#encode').val("");
+            $('#imgw').val("");
+            $('#blah').attr("src", "../../images/PICA.jpg");
+
+        }
+
+        var dependentCount = 0;
+
+        function Delete(id) {
+            $('#' + id).remove();
+            arr = arr.filter(item => item !== id);
+            dependentCount--;
+            $('#countdependant').text(dependentCount)
+        }
+        function create() {
+            count++;
+            $('#mcontent').append(
+                '<tr id="' + count + '">' +
+                '<td><input id="name_' + count + '" type="text" placeholder="name" /></td>' +
+                '<td><input id="birth_' + count + '" type="date" /></td>' +
+                '<td><a href="javascript:;" onclick="Delete(' + count + ')"><i class="fa fa-trash"></i></a></td>' +
+                '<td><input hidden type="date" /></td>' +
+                '</tr>');
+            arr.push(count);
+            dependentCount++;
+            $('#countdependant').text(dependentCount)
+        }
+        var obj = new Array();
+        function SubmitForm() {
+
+
+            obj = [];
+            for (let index = 0; index < arr.length; index++) {
+                obj.push({
+                    Name: $('#name_' + arr[index]).val(),
+                    Bdate: $('#birth_' + arr[index]).val(),
+                    Id: parseInt($('#id_' + arr[index]).val())
+                });
+            }
+            console.log(obj);
+            $('#dependant').val(JSON.stringify(obj));
+            $('#DataForm').submit();
+
+        }
+</script>
+}
+
+
+
+
+
+
+
+
+
+
